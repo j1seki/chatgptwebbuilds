@@ -2,9 +2,11 @@
   "name": "shared-terminal",
   "private": true,
   "type": "module",
-  "scripts": { "start": "node server.js" },
+  "scripts": {
+    "start": "node server.js",
+    "worker": "node worker.js"
+  },
   "dependencies": {
-    "@renderinc/sdk": "1.5.0",
     "express": "^5.1.0",
     "ws": "^8.18.3"
   }
