@@ -89,7 +89,13 @@ async function startServer() {
   serverReady = false;
   setStatus('Starting Express…');
   print('$ npm run dev', 'cmd');
-  serverProcess = await webcontainer.spawn('npm', ['run', 'dev']);
+  try {
+    serverProcess = await webcontainer.spawn('npm', ['run', 'dev']);
+  } catch (error) {
+    print('Unable to start server: ' + error.message, 'err');
+    setStatus('Server failed to start');
+    return;
+  }
   pipeOutput(serverProcess);
   stopButton.disabled = false;
   const currentProcess = serverProcess;
