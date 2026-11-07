@@ -172,13 +172,17 @@ async function runCommand(command) {
     commandInput.focus();
   }
 }
+async function stopServerProcess() {
+  const currentProcess = serverProcess;
+  if (!currentProcess) return;
+  currentProcess.kill();
+  await currentProcess.exit;
+  if (serverProcess === currentProcess) serverProcess = null;
+}
 async function restartServer() {
   if (!webcontainer) return;
   await saveFiles();
-  if (serverProcess) {
-    serverProcess.kill();
-    await new Promise((resolve) => setTimeout(resolve, 250));
-  }
+  await stopServerProcess();
   startServer();
 }
 bootButton.addEventListener('click', boot);
@@ -188,10 +192,7 @@ stopButton.addEventListener('click', () => {
 });
 resetButton.addEventListener('click', async () => {
   if (!webcontainer) return;
-  if (serverProcess) {
-    serverProcess.kill();
-    await new Promise((resolve) => setTimeout(resolve, 250));
-  }
+  await stopServerProcess();
   files = { ...starterFiles };
   await mountFiles();
   writeEditor();
