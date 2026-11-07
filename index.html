@@ -1,67 +1,56 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10131a">
-  <meta name="description" content="A collection of interactive web applications and experiments.">
-  <title>ChatGPT Web Builds</title>
-  <style>
-    :root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#eef2f8;background:#10131a;font-synthesis:none}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 14% 0%,#263854 0,transparent 45%),#10131a}
-    a{color:inherit}main{width:min(1080px,calc(100% - 44px));margin:0 auto}
-    .hero{padding:clamp(76px,13vh,145px) 0 70px}.eyebrow{font-size:.72rem;letter-spacing:.17em;text-transform:uppercase;color:#91b1e8}
-    h1{font-size:clamp(3rem,8vw,6.3rem);line-height:.98;letter-spacing:-.075em;margin:22px 0}
-    .hero p{max-width:650px;color:#aab6c9;font-size:1.05rem;line-height:1.8;margin:24px 0 0}
-    .section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin:12px 0 22px}
-    h2{font-size:1.55rem;letter-spacing:-.04em;margin:0}.section-head p{color:#7f8da3;font-size:.85rem;margin:0}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:90px}
-    .card{position:relative;display:flex;flex-direction:column;min-height:230px;padding:25px;border:1px solid #303b50;border-radius:16px;background:linear-gradient(145deg,#1b2535,#151b27);text-decoration:none;transition:transform .18s,border-color .18s}
-    .card[href]:hover{transform:translateY(-3px);border-color:#789ed8}
-    .card-top{display:flex;justify-content:space-between;align-items:center}.number,.status{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:#8fa9d0}
-    .status{border:1px solid #3d684f;color:#8fe0b0;padding:5px 8px;border-radius:99px}
-    .card h3{font-size:1.45rem;letter-spacing:-.04em;margin:28px 0 9px}.card p{color:#a3afc2;line-height:1.65;font-size:.9rem;margin:0;max-width:480px}
-    .card-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:24px;color:#8faee4;font-size:.8rem}
-    .card.disabled{opacity:.55;border-style:dashed}.card.disabled .status{border-color:#515b6b;color:#a4adbc}
-    footer{border-top:1px solid #293346;padding:22px 0 34px;color:#738198;font-size:.78rem}
-    @media(max-width:680px){.grid{grid-template-columns:1fr}.hero{padding-top:85px}.section-head{align-items:start;flex-direction:column}}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b14">
+<meta name="description" content="A tiny experiment in building with ChatGPT by voice — from spoken idea to code pushed to GitHub.">
+<title>ChatGPT Web Builds — Built by voice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#080b14;--ink:#f4f6ff;--muted:#9ba5bc;--line:rgba(190,205,255,.14);--cyan:#75e4ff;--violet:#a78bfa}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,system-ui,sans-serif;overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at 50% 38%,rgba(48,72,145,.18),transparent 55%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:auto,56px 56px,56px 56px;mask-image:linear-gradient(to bottom,black,transparent 88%)}
+nav{height:76px;max-width:1160px;margin:auto;padding:0 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.brand{display:flex;gap:12px;align-items:center;font-weight:800;letter-spacing:-.04em}.mark{width:30px;height:30px;border-radius:10px;background:linear-gradient(135deg,var(--cyan),var(--violet));display:grid;place-items:center;color:#08101c;font-size:17px}.navright{font:11px 'DM Mono',monospace;color:var(--muted);letter-spacing:.08em}.navright a{color:var(--ink);text-decoration:none;margin-left:24px}
+.hero{position:relative;min-height:720px;max-width:1160px;margin:auto;padding:112px 28px 90px;display:flex;flex-direction:column;align-items:center;text-align:center;isolation:isolate}#scene{position:absolute;inset:0;width:100%;height:100%;z-index:-1;opacity:.92;pointer-events:none}.eyebrow{display:inline-flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid var(--line);border-radius:99px;background:rgba(12,17,31,.72);font:10px 'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#c2cce0}.dot{width:6px;height:6px;border-radius:50%;background:#83f0c2;box-shadow:0 0 12px #83f0c2}
+h1{font-size:clamp(48px,8vw,92px);line-height:.99;letter-spacing:-.075em;max-width:900px;margin:32px 0 22px;font-weight:800}h1 span{background:linear-gradient(100deg,#fff 15%,#9deaff 52%,#b9a5ff 90%);-webkit-background-clip:text;background-clip:text;color:transparent}.lead{max-width:610px;color:#aeb8cd;font-size:17px;line-height:1.8;margin:0}.actions{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;justify-content:center}.btn{padding:13px 19px;border-radius:10px;text-decoration:none;font-weight:700;font-size:13px;transition:transform .2s,border-color .2s}.btn:hover{transform:translateY(-2px)}.primary{color:#08101c;background:linear-gradient(110deg,#8ceaff,#b6a3ff);box-shadow:0 8px 35px #77dfff25}.secondary{color:#e6ebf8;border:1px solid var(--line);background:#111727a8}.hint{margin-top:58px;color:#66728b;font:10px 'DM Mono',monospace;letter-spacing:.15em;text-transform:uppercase}
+section{max-width:1040px;margin:0 auto;padding:54px 28px 90px}.sectionhead{text-align:center;margin-bottom:38px}.kicker{font:10px 'DM Mono',monospace;color:var(--cyan);letter-spacing:.16em;text-transform:uppercase}.sectionhead h2{font-size:clamp(28px,4vw,42px);letter-spacing:-.06em;margin:12px 0}.sectionhead p{color:var(--muted);line-height:1.7;margin:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;padding:24px;background:linear-gradient(145deg,rgba(23,31,52,.78),rgba(11,15,27,.8));min-height:205px;text-decoration:none;transition:transform .2s,border-color .2s}.card[href]:hover{transform:translateY(-3px);border-color:#789ed8}.num{font:11px 'DM Mono',monospace;color:#8390aa}.status{font:10px 'DM Mono',monospace;color:#83f0c2}.card h3{font-size:18px;margin:22px 0 9px;letter-spacing:-.03em}.card p{font-size:13px;line-height:1.7;color:var(--muted);margin:0}.card-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:22px;color:#9deaff;font:10px 'DM Mono',monospace;letter-spacing:.06em}.card.disabled{opacity:.6;border-style:dashed}.quote{margin:26px auto 0;padding:22px 26px;border-left:2px solid var(--violet);background:#11172780;color:#c5cde0;line-height:1.8;font-size:14px;max-width:750px}
+footer{border-top:1px solid var(--line);padding:26px 28px;color:#77829a;font:10px 'DM Mono',monospace;letter-spacing:.08em;display:flex;justify-content:space-between;gap:16px;max-width:1160px;margin:auto}footer a{color:#b9c7e4;text-decoration:none}
+@media(max-width:700px){nav{padding:0 18px}.navright span{display:none}.hero{padding-top:92px;min-height:650px}.lead{font-size:15px}.grid{grid-template-columns:1fr}.card{min-height:auto}section{padding-bottom:75px}footer{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
 </head>
 <body>
-  <main>
-    <header class="hero">
-      <div class="eyebrow">A collection of interactive experiments</div>
-      <h1>ChatGPT<br>Web Builds.</h1>
-      <p>Small applications, prototypes, and technical experiments built to run on the web. Pick a project below to open its dedicated experience.</p>
-    </header>
-
-    <section aria-labelledby="work-heading">
-      <div class="section-head">
-        <div>
-          <div class="eyebrow">THE COLLECTION</div>
-          <h2 id="work-heading">Examples &amp; projects</h2>
-        </div>
-        <p>One home. A separate URL for every build.</p>
-      </div>
-
-      <div class="grid">
-        <a class="card" href="./webcontainers/">
-          <div class="card-top"><span class="number">01 / DEVELOPER TOOLS</span><span class="status">Available</span></div>
-          <h3>Node.js in your browser</h3>
-          <p>Start a real Node.js environment with StackBlitz WebContainers. Edit code, run processes, install npm packages, and preview a local web server directly in your browser.</p>
-          <div class="card-bottom"><span>Open WebContainers demo</span><span aria-hidden="true">↗</span></div>
-        </a>
-
-        <article class="card disabled" aria-disabled="true">
-          <div class="card-top"><span class="number">COMING NEXT</span><span class="status">Planned</span></div>
-          <h3>More experiments</h3>
-          <p>This collection is designed to grow. Future applications will appear here as their own cards and URL slugs.</p>
-          <div class="card-bottom"><span>New projects will be added here</span><span aria-hidden="true">＋</span></div>
-        </article>
-      </div>
-    </section>
-
-    <footer>ChatGPT Web Builds · Independent browser-based projects</footer>
-  </main>
-</body>
-</html>
+<nav><div class="brand"><div class="mark">✳</div>chatgpt<span style="color:#8793ad">/webbuilds</span></div><div class="navright"><span>AN EXPERIMENT IN MAKING</span><a href="https://github.com/j1seki/chatgptwebbuilds" target="_blank" rel="noreferrer">SOURCE ↗</a></div></nav>
+<main>
+<header class="hero"><canvas id="scene" aria-hidden="true"></canvas><div class="eyebrow"><i class="dot"></i> HUMAN IDEA · AI BUILT · OPEN SOURCE</div><h1>Ideas in.<br><span>Websites out.</span></h1><p class="lead">A little experiment proving that a conversation can become a real thing on the internet. Every build in this repository is made by ChatGPT — from the first spoken idea to the code.</p><div class="actions"><a class="btn primary" href="https://github.com/j1seki/chatgptwebbuilds" target="_blank" rel="noreferrer">Explore the repository ↗</a><a class="btn secondary" href="#projects">Browse projects ↓</a></div><div class="hint">NO HAND-WRITTEN CODE · JUST A VOICE CONVERSATION</div></header>
+<section id="projects"><div class="sectionhead"><div class="kicker">THE COLLECTION</div><h2>Examples &amp; projects</h2><p>One home. A separate URL for every build.</p></div><div class="grid">
+<a class="card" href="./webcontainers/"><div class="num">01 / DEVELOPER TOOLS <span class="status"> · AVAILABLE</span></div><h3>Node.js in your browser</h3><p>Start a real Node.js environment with StackBlitz WebContainers. Edit code, run processes, install npm packages, and preview a local web server directly in your browser.</p><div class="card-bottom"><span>OPEN WEBCONTAINERS DEMO</span><span>↗</span></div></a>
+<article class="card disabled"><div class="num">COMING NEXT <span class="status"> · PLANNED</span></div><h3>More experiments</h3><p>This collection is designed to grow. Future applications will appear here as their own cards and URL slugs.</p><div class="card-bottom"><span>NEW PROJECTS WILL APPEAR HERE</span><span>＋</span></div></article>
+</div></section>
+<section id="how"><div class="sectionhead"><div class="kicker">THE PROCESS</div><h2>One conversation. Three parts.</h2><p>Voice on the front. A text model behind the scenes. GitHub at the finish line.</p></div><div class="grid"><article class="card"><div class="num">01 / SPEAK</div><h3>Start with a voice</h3><p>An idea is described naturally in ChatGPT Voice. No technical brief or code editor required.</p></article><article class="card"><div class="num">02 / BUILD</div><h3>ChatGPT creates</h3><p>The voice experience hands the task to the text model, which plans and writes the actual project files.</p></article></div><div class="quote">“Everything here is made by ChatGPT using the voice model up front and the text model working behind the scenes — directed entirely by voice.”</div></section>
+</main>
+<footer><span>MADE THROUGH CONVERSATION · 2026</span><a href="https://github.com/j1seki/chatgptwebbuilds" target="_blank" rel="noreferrer">GITHUB.COM/J1SEKI/CHATGPTWEBBUILDS ↗</a></footer>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
+const canvas=document.querySelector('#scene');
+const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+try{
+ const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.z=8;
+ const group=new THREE.Group();scene.add(group);
+ const geometry=new THREE.IcosahedronGeometry(2.05,2);
+ const material=new THREE.MeshBasicMaterial({color:0x8bdfff,wireframe:true,transparent:true,opacity:.17});
+ const mesh=new THREE.Mesh(geometry,material);group.add(mesh);
+ const inner=new THREE.Mesh(new THREE.IcosahedronGeometry(1.72,1),new THREE.MeshBasicMaterial({color:0xa78bfa,wireframe:true,transparent:true,opacity:.10}));group.add(inner);
+ const count=850,positions=new Float32Array(count*3);
+ for(let i=0;i<count;i++){const r=3.1+Math.random()*2.7,a=Math.random()*Math.PI*2,b=Math.acos(2*Math.random()-1);positions[i*3]=r*Math.sin(b)*Math.cos(a);positions[i*3+1]=r*Math.cos(b);positions[i*3+2]=r*Math.sin(b)*Math.sin(a)}
+ const starsGeo=new THREE.BufferGeometry();starsGeo.setAttribute('position',new THREE.BufferAttribute(positions,3));
+ const stars=new THREE.Points(starsGeo,new THREE.PointsMaterial({color:0x9bbcff,size:.018,transparent:true,opacity:.7}));scene.add(stars);
+ const resize=()=>{const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()};new ResizeObserver(resize).observe(canvas);resize();
+ const pointer={x:0,y:0};window.addEventListener('pointermove',e=>{pointer.x=(e.clientX/innerWidth-.5)*.35;pointer.y=(e.clientY/innerHeight-.5)*.2});
+ const tick=()=>{if(!reduced){group.rotation.y+=.0017;group.rotation.x+=.0007;stars.rotation.y-=.00015;group.rotation.y+=pointer.x*.0008;group.rotation.x+=pointer.y*.0008}renderer.render(scene,camera);if(!reduced)requestAnimationFrame(tick)};tick();
+}catch(e){canvas.style.display='none';}
+</script>
+</body></html>
