@@ -12,6 +12,20 @@ const port = Number(process.env.PORT || 3001);
 const frontendOrigin = process.env.FRONTEND_ORIGIN || "";
 const render = process.env.RENDER_API_KEY && process.env.RENDER_WORKSPACE_ID ? new Render() : null;
 
+// Allow the deployed frontend to call the API. WebSocket origin checks below
+// do not add CORS headers to ordinary HTTP fetch requests.
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && origin === frontendOrigin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  }
+  if (req.method === "OPTIONS") return res.sendStatus(origin === frontendOrigin ? 204 : 403);
+  next();
+});
+
 app.use(express.json({ limit: "8kb" }));
 app.get("/health", (_req, res) => res.json({ ok: true, sandboxEnabled: Boolean(render) }));
 
