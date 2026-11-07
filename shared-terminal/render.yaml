@@ -5,25 +5,28 @@ services:
     rootDir: shared-terminal
     plan: free
     region: ohio
-    buildCommand: npm install
+    buildCommand: npm install --omit=dev
     startCommand: npm start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: RENDER_API_KEY
-        sync: false
-      - key: RENDER_WORKSPACE_ID
-        value: tea-dbn9pb0u01pc73c4pmug
       - key: FRONTEND_ORIGIN
-        value: https://shared-terminal-ui.onrender.com
+        value: https://shared-terminal-ui-00rp.onrender.com
 
   - type: web
     name: shared-terminal-ui
     runtime: static
     rootDir: shared-terminal
-    buildCommand: mkdir -p public && cp index.html public/index.html && printf 'window.API_BASE="%s";' "$VITE_API_URL" > public/config.js
-    staticPublishPath: ./public
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    headers:
+      - path: /*
+        name: Cross-Origin-Opener-Policy
+        value: same-origin
+      - path: /*
+        name: Cross-Origin-Embedder-Policy
+        value: require-corp
     envVars:
       - key: VITE_API_URL
-        value: https://shared-terminal-api.onrender.com
+        value: https://shared-terminal-api-00rp.onrender.com
