@@ -124,7 +124,8 @@ async function boot() {
     if (!window.crossOriginIsolated || !window.SharedArrayBuffer) {
       throw new Error('Cross-origin isolation is not active yet. Allow the service worker to reload this page, then try again. Check that third-party extensions are not blocking service workers.');
     }
-    webcontainer = await WebContainer.boot({ coep: 'credentialless' });
+    const coep = window.sessionStorage.getItem('coiCoepHasFailed') === 'true' ? 'require-corp' : 'credentialless';
+    webcontainer = await WebContainer.boot({ coep });
     webcontainer.on('server-ready', (port, url) => {
       if (port !== 3000) return;
       serverReady = true;
