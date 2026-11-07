@@ -16,7 +16,7 @@ services:
       - key: RENDER_WORKSPACE_ID
         value: tea-dbn9pb0u01pc73c4pmug
       - key: FRONTEND_ORIGIN
-        value: https://shared-terminal-ui.onrender.com
+        value: https://shared-terminal-ui-00rp.onrender.com
 
   - type: web
     name: shared-terminal-ui
@@ -26,4 +26,4 @@ services:
     staticPublishPath: ./public
     envVars:
       - key: VITE_API_URL
-        value: https://shared-terminal-api.onrender.com
+        value: https://shared-terminal-api-00rp.onrender.com
