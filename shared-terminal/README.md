@@ -1,44 +1,69 @@
 # Shared Terminal
 
-A browser-based shared command workspace. The website and signaling API run on Render's free services. Actual command execution runs on a machine you control (for example, your always-on Linux host) through a small outbound-connected worker. No Render Sandbox, paid sandbox provider, or inbound port forwarding is required.
+A two-person shared terminal where both participants only open a website. There is no local agent, Docker installation, browser extension, or Render Sandbox.
 
-## Render deployment
+## How it works
 
-Deploy with Blueprint path `shared-terminal/render.yaml`. On the API service, set `RUNNER_TOKEN` to a long random secret. Generate one with:
+- The host opens the website and creates a room.
+- The host's browser starts a StackBlitz WebContainer, which runs a Node.js shell inside the browser.
+- The host shares the room link with a guest.
+- The host approves the guest.
+- Terminal keystrokes and output are relayed through the small Render API WebSocket service.
+- The host browser executes the shell; Render does not execute user commands.
 
-```sh
-openssl rand -hex 32
-```
+The host must keep the browser tab open. If the host closes the tab or loses connectivity, the shared shell stops being available.
 
-Keep the same value private and configure it on the execution host. Do not commit it or paste it into chat.
+## Important runtime boundary
 
-## Self-hosted execution worker
+This is a browser-hosted Node.js environment, not the host computer's native terminal and not a general-purpose Linux VM. It cannot access arbitrary files, applications, or operating-system processes on the host computer. It is intended for Node.js tooling and projects supported by WebContainers.
 
-Requirements on the execution host:
-- Linux or macOS with Docker Engine/Desktop running.
-- Node.js 20 or newer.
-- Outbound HTTPS/WSS access to the Render API.
+WebContainers require HTTPS, cross-origin isolation (COOP/COEP headers), and a supported desktop browser. Current practical target: Chrome or Edge. Other browsers may have limitations. See [WebContainers browser support](https://webcontainers.io/guides/browser-support).
 
-On the execution host, clone this repository and run:
+## Deploy on Render
+
+Deploy the Blueprint at `shared-terminal/render.yaml`.
+
+The Blueprint creates:
+- A free Render web service for room creation and WebSocket signaling.
+- A free Render static site for the browser application.
+
+Set `FRONTEND_ORIGIN` and `VITE_API_URL` to the actual Render service URLs if Render assigns different names. The static site sets the required COOP/COEP headers for WebContainers.
+
+No Render Sandbox, Render API key, execution worker, or payment method for sandbox execution is required. Free Render services have sleep and usage limits; room state is held in API memory and is lost when the API restarts.
+
+## Local development
+
+Install Node.js 20 or newer, then:
 
 ```sh
 cd shared-terminal
 npm install
-export RUNNER_WS_URL="wss://YOUR-API-HOST.onrender.com/worker"
-export RUNNER_TOKEN="THE_SAME_RANDOM_SECRET_SET_ON_RENDER"
-npm run worker
 ```
 
-Replace `YOUR-API-HOST` with the deployed API hostname. Keep the worker running; it reconnects automatically. The first start removes leftover containers with the `shared-terminal-` prefix. Each room gets a separate `node:22-bookworm-slim` container, capped at 768 MB RAM, 1 CPU, and 128 processes. Containers run as the unprivileged `node` user. The Docker bridge network permits package downloads and other outbound internet access. Room containers are removed when the host leaves.
+Run the signaling API:
 
-## Current limitations
+```sh
+npm start
+```
 
-- Commands are streamed one at a time and each command starts a new shell process. Files persist within the room container, but shell state such as `cd` does not persist between commands.
-- No interactive PTY yet: editors, REPLs, stdin prompts, resize, and interrupt are not supported.
-- Rooms are in API process memory and disappear if the free Render service restarts. Render free services may sleep while idle.
-- The worker host must remain online. If it disconnects, new rooms cannot be created.
-- This is an experiment, not a hardened multi-tenant service. Approved guests can run arbitrary commands in their room. Docker is a useful isolation boundary but not a substitute for a hardened VM sandbox. Do not expose it to strangers or use it for sensitive data.
+In another terminal, run the static app with the API URL:
 
-## Cost
+```sh
+VITE_API_URL=http://localhost:3001 npm run build
+npm run dev
+```
 
-The app does not use Render Sandboxes or any paid execution API. Render's free-service limits still apply, and the execution host uses your own machine and electricity/network connection.
+For local WebContainer use, serve the app over HTTPS or localhost and configure the dev server with:
+
+- `Cross-Origin-Opener-Policy: same-origin`
+- `Cross-Origin-Embedder-Policy: require-corp`
+
+## Security and limitations
+
+- A room code is a discovery identifier, not a password. Only share it with intended participants.
+- The host token is kept in the host tab's session storage and is not included in the invite link.
+- Approved guests can type commands into the shared WebContainer shell. Treat approval like granting shell access to that browser-based project environment.
+- Do not enter secrets or sensitive data into a shared room.
+- Room state is in memory. A Render API restart clears rooms.
+- Free Render services may sleep when idle, so the first request can take time to wake the API.
+- This is an MVP, not a hardened multi-tenant terminal service.
