@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080b14">
+<title>API Testing Lab · ChatGPT Web Builds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#080b14;--panel:#111827;--ink:#f3f6ff;--muted:#9ba5bc;--line:rgba(190,205,255,.15);--cyan:#75e4ff;--violet:#b9a5ff;--red:#ff8e9b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0,rgba(48,72,145,.2),transparent 50%),var(--bg);color:var(--ink);font:14px Manrope,system-ui,sans-serif}a{color:var(--cyan);text-decoration:none}.wrap{max-width:1200px;margin:auto;padding:0 24px}.top{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.brand{font-weight:800;letter-spacing:-.04em}.brand span{color:#8995af}.toplinks{font:10px 'DM Mono',monospace;letter-spacing:.1em}.hero{padding:48px 0 30px}.eyebrow,.label{font:10px 'DM Mono',monospace;letter-spacing:.13em;text-transform:uppercase;color:var(--cyan)}h1{font-size:clamp(36px,6vw,60px);letter-spacing:-.07em;margin:10px 0}.hero p{max-width:760px;color:var(--muted);line-height:1.7}.notice{border:1px solid #6caed044;background:#152338;padding:13px 16px;border-radius:10px;color:#b9cce0;font-size:12px;line-height:1.6;margin-top:20px}.panel{background:linear-gradient(145deg,#151e30,#0e1421);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}.requestline{display:grid;grid-template-columns:150px minmax(180px,1fr) auto;gap:10px}.field,select,textarea{background:#080e1a;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:12px;font:12px 'DM Mono',monospace;width:100%;min-width:0}.field:focus,select:focus,textarea:focus{outline:1px solid var(--cyan);border-color:var(--cyan)}button{border:0;border-radius:8px;padding:12px 17px;background:linear-gradient(110deg,#8ceaff,#b6a3ff);color:#08101c;font-weight:800;cursor:pointer}button:disabled{opacity:.5;cursor:wait}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.subhead{font:10px 'DM Mono',monospace;color:#aebbd3;letter-spacing:.12em;margin:0 0 12px}.headers{min-height:112px;resize:vertical}.body{min-height:170px;resize:vertical}.responsebar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px;font:11px 'DM Mono',monospace;color:var(--muted)}.responsebar strong{color:var(--ink)}.response{background:#080e1a;border:1px solid var(--line);border-radius:9px;padding:14px;min-height:230px;max-height:540px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.65 'DM Mono',monospace;color:#d9e5fa}.error{color:var(--red)}.muted{color:var(--muted)}.footer{padding:20px 0 42px;color:#74809a;font:10px 'DM Mono',monospace}.smallbtn{background:#1b2940;color:#cfe8ff;border:1px solid var(--line);padding:8px 11px;font-size:10px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}@media(max-width:720px){.requestline{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.wrap{padding:0 15px}.hero{padding-top:34px}}
+</style>
+</head>
+<body><div class="wrap">
+<header class="top"><div class="brand">chatgpt<span>/webbuilds</span></div><div class="toplinks"><a href="../">← ALL PROJECTS</a>　<a href="https://github.com/j1seki/chatgptwebbuilds" target="_blank" rel="noreferrer">SOURCE ↗</a></div></header>
+<section class="hero"><div class="eyebrow">DEVELOPER TOOL / 02</div><h1>API Testing Lab.</h1><p>Send HTTP requests directly from your browser. Inspect status codes, response times, headers, and formatted JSON without installing a desktop API client.</p><div class="notice"><strong>Browser limitation:</strong> Requests run from your browser, not a proxy. Many APIs block cross-origin requests (CORS); this lab cannot bypass those restrictions. Do not enter secrets or production credentials on a public/shared computer.</div></section>
+<section class="panel"><div class="requestline"><select id="method" aria-label="HTTP method"><option>GET</option><option>POST</option><option>PUT</option><option>PATCH</option><option>DELETE</option><option>HEAD</option></select><input id="url" class="field" type="url" spellcheck="false" placeholder="https://api.example.com/v1/items" value="https://jsonplaceholder.typicode.com/posts/1"><button id="send">Send request ↗</button></div></section>
+<div class="grid">
+<section class="panel"><h2 class="subhead">REQUEST HEADERS · JSON OBJECT</h2><textarea id="headers" class="field headers" spellcheck="false">{}</textarea><div class="actions"><button id="clearHeaders" class="smallbtn">Clear headers</button></div></section>
+<section class="panel"><h2 class="subhead">REQUEST BODY</h2><textarea id="body" class="field body" spellcheck="false" placeholder='{"title":"hello","body":"world","userId":1}'></textarea><div class="actions"><button id="sampleBody" class="smallbtn">Load JSON sample</button><button id="clearBody" class="smallbtn">Clear body</button></div></section>
+</div>
+<section class="panel"><div class="responsebar"><span class="label">RESPONSE</span><span id="status">Waiting for request</span><span id="duration"></span><span id="size"></span><button id="copy" class="smallbtn" disabled>Copy response</button></div><div class="grid"><div><h2 class="subhead">RESPONSE BODY</h2><pre id="response" class="response">Your response will appear here.</pre></div><div><h2 class="subhead">RESPONSE HEADERS</h2><pre id="responseHeaders" class="response">No response headers yet.</pre></div></div></section>
+<footer class="footer">CLIENT-SIDE ONLY · NO PROXY · NO REQUEST HISTORY STORED · <a href="https://github.com/j1seki/chatgptwebbuilds">OPEN SOURCE</a></footer>
+</div>
+<script type="module">
+const $=s=>document.querySelector(s), send=$('#send'), response=$('#response'), responseHeaders=$('#responseHeaders');
+let lastResponse='';
+function pretty(text,contentType=''){if(!text)return '(empty response)';if(contentType.includes('json')){try{return JSON.stringify(JSON.parse(text),null,2)}catch{}}try{return JSON.stringify(JSON.parse(text),null,2)}catch{return text}}
+send.addEventListener('click',async()=>{
+ const url=$('#url').value.trim(),method=$('#method').value;
+ if(!url){response.textContent='Enter a request URL.';return}
+ let headers;
+ try{headers=JSON.parse($('#headers').value||'{}');if(!headers||Array.isArray(headers)||typeof headers!=='object')throw Error('Headers must be a JSON object.')}
+ catch(e){response.textContent='Invalid headers JSON: '+e.message;return}
+ const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),30000),started=performance.now();
+ send.disabled=true;send.textContent='Sending…';response.classList.remove('error');response.textContent='Waiting for response…';responseHeaders.textContent='Loading…';$('#status').textContent='Request in progress';$('#duration').textContent='';$('#size').textContent='';
+ try{
+  const options={method,headers,signal:controller.signal};
+  if(!['GET','HEAD'].includes(method)&&$('#body').value.trim())options.body=$('#body').value;
+  const result=await fetch(url,options),elapsed=Math.round(performance.now()-started),text=method==='HEAD'?'':await result.text();
+  lastResponse=pretty(text,result.headers.get('content-type')||'');
+  response.textContent=lastResponse;responseHeaders.textContent=[...result.headers.entries()].map(([k,v])=>k+': '+v).join('\n')||'(no exposed headers)';
+  $('#status').innerHTML='<strong>'+result.status+' '+result.statusText+'</strong>';
+  $('#duration').textContent=elapsed+' ms';$('#size').textContent=new Blob([text]).size.toLocaleString()+' bytes';$('#copy').disabled=!text;
+ }catch(error){
+  lastResponse='';response.textContent=error.name==='AbortError'?'Request timed out after 30 seconds.':error.message+'\n\nThis is commonly caused by CORS, DNS, TLS, or network restrictions. Try an API that explicitly allows browser requests.';response.classList.add('error');responseHeaders.textContent='No readable response headers.';$('#status').textContent='Request failed';$('#copy').disabled=true;
+ }finally{clearTimeout(timeout);send.disabled=false;send.textContent='Send request ↗'}
+});
+$('#clearHeaders').addEventListener('click',()=>$('#headers').value='{}');
+$('#sampleBody').addEventListener('click',()=>{$('#body').value=JSON.stringify({title:'hello from the API lab',body:'Testing a POST request',userId:1},null,2);$('#method').value='POST';$('#url').value='https://jsonplaceholder.typicode.com/posts'});
+$('#clearBody').addEventListener('click',()=>$('#body').value='');
+$('#copy').addEventListener('click',async()=>{if(lastResponse)await navigator.clipboard.writeText(lastResponse)});
+</script></body></html>
