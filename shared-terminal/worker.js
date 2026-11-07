@@ -1,4 +1,3 @@
-import crypto from "node:crypto";
 import { spawn } from "node:child_process";
 import WebSocket from "ws";
 
@@ -43,8 +42,8 @@ async function createRoom(ws, roomId) {
   try {
     await docker([
       "run", "-d", "--rm", "--name", name,
-      "--network", "none",
-      "--memory", "512m", "--cpus", "1", "--pids-limit", "128",
+      "--network", "bridge",
+      "--memory", "768m", "--cpus", "1", "--pids-limit", "128",
       "--tmpfs", "/tmp:rw,noexec,nosuid,size=64m",
       "--user", "node", "--workdir", "/home/node",
       image, "sleep", "infinity"
@@ -56,7 +55,7 @@ async function createRoom(ws, roomId) {
   }
 }
 
-async function execute(ws, roomId, command, requestId) {
+function execute(ws, roomId, command, requestId) {
   const name = containers.get(roomId);
   if (!name) return send(ws, { type: "exec_error", roomId, requestId, message: "Room container is unavailable." });
   const child = spawn("docker", ["exec", "-i", name, "sh", "-lc", command], { stdio: ["ignore", "pipe", "pipe"] });
@@ -74,23 +73,30 @@ async function execute(ws, roomId, command, requestId) {
   });
 }
 
-async function main() {
-  await removeOrphans();
+let reconnectTimer;
+function connect() {
   const ws = new WebSocket(endpoint, { headers: { Authorization: `Bearer ${token}` } });
   ws.on("open", () => console.log("Shared Terminal runner connected."));
   ws.on("message", raw => {
     let message;
     try { message = JSON.parse(raw.toString()); } catch { return; }
     if (message.type === "create") void createRoom(ws, message.roomId);
-    if (message.type === "exec") void execute(ws, message.roomId, message.command, message.requestId);
+    if (message.type === "exec") execute(ws, message.roomId, message.command, message.requestId);
     if (message.type === "destroy") {
       const name = containers.get(message.roomId);
       containers.delete(message.roomId);
       if (name) void docker(["rm", "-f", name]).catch(error => console.error("Container cleanup failed:", error.message));
     }
   });
-  ws.on("close", () => { console.error("Runner connection closed; reconnecting in 3 seconds."); setTimeout(main, 3000); });
+  ws.on("close", () => {
+    console.error("Runner connection closed; reconnecting in 3 seconds.");
+    clearTimeout(reconnectTimer);
+    reconnectTimer = setTimeout(connect, 3000);
+  });
   ws.on("error", error => console.error("Runner websocket error:", error.message));
 }
 
-main().catch(error => { console.error(error); process.exit(1); });
+removeOrphans().then(connect).catch(error => {
+  console.error("Could not clean up old room containers:", error.message);
+  process.exit(1);
+});
