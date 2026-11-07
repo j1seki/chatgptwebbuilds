@@ -23,7 +23,6 @@ services:
     runtime: static
     rootDir: shared-terminal
     plan: free
-    region: ohio
     buildCommand: mkdir -p public && cp index.html public/index.html && printf 'window.API_BASE="%s";' "$VITE_API_URL" > public/config.js
     staticPublishPath: ./public
     envVars:
