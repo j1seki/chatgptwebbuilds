@@ -58,7 +58,7 @@ async function createRoom(ws, roomId) {
 function execute(ws, roomId, command, requestId) {
   const name = containers.get(roomId);
   if (!name) return send(ws, { type: "exec_error", roomId, requestId, message: "Room container is unavailable." });
-  const child = spawn("docker", ["exec", "-i", name, "sh", "-lc", command], { stdio: ["ignore", "pipe", "pipe"] });
+  const child = spawn("docker", ["exec", "-i", name, "timeout", "--signal=KILL", "120s", "sh", "-lc", command], { stdio: ["ignore", "pipe", "pipe"] });
   const timeout = setTimeout(() => child.kill("SIGKILL"), 120000);
   for (const [stream, source] of [["stdout", child.stdout], ["stderr", child.stderr]]) {
     source.on("data", chunk => send(ws, { type: "output", roomId, requestId, stream, data: chunk.toString("utf8") }));
