@@ -7,7 +7,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         home: 'index.html',
-        webcontainers: 'webcontainers/index.html'
+        webcontainers: 'webcontainers/index.html',
+        apiLab: 'api-lab/index.html'
       }
     }
   }
