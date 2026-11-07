@@ -2,18 +2,17 @@ import crypto from "node:crypto";
 import http from "node:http";
 import express from "express";
 import { WebSocketServer, WebSocket } from "ws";
-import { Render } from "@renderinc/sdk";
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ noServer: true, maxPayload: 8192 });
 const rooms = new Map();
+const pendingCreates = new Map();
 const port = Number(process.env.PORT || 3001);
 const frontendOrigin = process.env.FRONTEND_ORIGIN || "";
-const render = process.env.RENDER_API_KEY && process.env.RENDER_WORKSPACE_ID ? new Render() : null;
+const runnerToken = process.env.RUNNER_TOKEN || "";
+let runner = null;
 
-// Allow the deployed frontend to call the API. WebSocket origin checks below
-// do not add CORS headers to ordinary HTTP fetch requests.
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (origin && origin === frontendOrigin) {
@@ -25,44 +24,93 @@ app.use((req, res, next) => {
   if (req.method === "OPTIONS") return res.sendStatus(origin === frontendOrigin ? 204 : 403);
   next();
 });
-
 app.use(express.json({ limit: "8kb" }));
-app.get("/health", (_req, res) => res.json({ ok: true, sandboxEnabled: Boolean(render) }));
+app.get("/health", (_req, res) => res.json({ ok: true, runnerConnected: Boolean(runner && runner.readyState === WebSocket.OPEN) }));
 
 app.post("/api/rooms", async (_req, res) => {
-  if (!render) return res.status(503).json({ error: "Render Sandboxes are not configured. Set RENDER_API_KEY and RENDER_WORKSPACE_ID on the API service." });
+  if (!runner || runner.readyState !== WebSocket.OPEN) {
+    return res.status(503).json({ error: "The free execution host is offline. Start the shared-terminal worker on the host machine and try again." });
+  }
   const id = crypto.randomBytes(5).toString("hex").toUpperCase();
   const ownerToken = crypto.randomBytes(32).toString("hex");
-  const room = { id, ownerToken, sandboxId: null, clients: new Map(), busy: false };
+  const room = { id, ownerToken, clients: new Map(), busy: false };
   rooms.set(id, room);
-  try {
-    const sandbox = await render.sandboxes.create({ timeoutSeconds: 3600, networkPolicy: { type: "deny-all" } });
-    room.sandboxId = sandbox.id;
-    await render.sandboxes.waitUntilRunning(sandbox.id, { timeoutMs: 120000 });
-    res.status(201).json({ roomId: id, ownerToken });
-  } catch (error) {
+  const timeout = setTimeout(() => {
+    pendingCreates.delete(id);
     rooms.delete(id);
-    console.error("Sandbox provisioning failed", error);
-    res.status(502).json({ error: "Could not provision the isolated sandbox. Confirm Sandboxes are enabled and the API key is valid." });
-  }
+    res.status(504).json({ error: "The execution host did not create the room in time." });
+  }, 30000);
+  pendingCreates.set(id, {
+    resolve: () => { clearTimeout(timeout); res.status(201).json({ roomId: id, ownerToken }); },
+    reject: message => { clearTimeout(timeout); rooms.delete(id); res.status(502).json({ error: message }); }
+  });
+  runner.send(JSON.stringify({ type: "create", roomId: id }));
 });
 
 server.on("upgrade", (req, socket, head) => {
+  const url = new URL(req.url, "http://localhost");
+  if (url.pathname === "/worker") {
+    const auth = req.headers.authorization || "";
+    const supplied = auth.startsWith("Bearer ") ? auth.slice(7) : "";
+    if (!runnerToken || !sameSecret(supplied, runnerToken)) {
+      socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n"); socket.destroy(); return;
+    }
+    wss.handleUpgrade(req, socket, head, ws => wss.emit("connection", ws, req, true));
+    return;
+  }
   const origin = req.headers.origin;
   if (frontendOrigin && origin && origin !== frontendOrigin) {
     socket.write("HTTP/1.1 403 Forbidden\r\n\r\n"); socket.destroy(); return;
   }
-  wss.handleUpgrade(req, socket, head, ws => wss.emit("connection", ws, req));
+  wss.handleUpgrade(req, socket, head, ws => wss.emit("connection", ws, req, false));
 });
 
-function send(ws, payload) { if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(payload)); }
-function broadcast(room, payload) { for (const ws of room.clients.keys()) send(ws, payload); }
 function sameSecret(a, b) {
   const x = Buffer.from(a || ""), y = Buffer.from(b || "");
   return x.length === y.length && x.length > 0 && crypto.timingSafeEqual(x, y);
 }
+function send(ws, payload) { if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(payload)); }
+function broadcast(room, payload) { for (const ws of room.clients.keys()) send(ws, payload); }
 
-wss.on("connection", (ws, req) => {
+wss.on("connection", (ws, req, isWorker) => {
+  if (isWorker) {
+    if (runner && runner.readyState === WebSocket.OPEN) runner.close();
+    runner = ws;
+    console.log("Execution worker connected.");
+    ws.on("message", raw => {
+      let message;
+      try { message = JSON.parse(raw.toString()); } catch { return; }
+      if (message.type === "room_created" || message.type === "room_error") {
+        const pending = pendingCreates.get(message.roomId);
+        if (pending) {
+          pendingCreates.delete(message.roomId);
+          if (message.type === "room_created") pending.resolve();
+          else pending.reject("Could not create the isolated Docker container: " + String(message.message || "unknown error").slice(0, 300));
+        }
+        return;
+      }
+      const room = rooms.get(message.roomId);
+      if (!room) return;
+      if (message.type === "output") broadcast(room, { type: "output", stream: message.stream, data: message.data });
+      if (message.type === "exit") {
+        broadcast(room, { type: "exit", code: message.code });
+        room.busy = false;
+        broadcast(room, { type: "ready" });
+      }
+      if (message.type === "exec_error") {
+        broadcast(room, { type: "error", message: message.message || "Execution failed." });
+        room.busy = false;
+        broadcast(room, { type: "ready" });
+      }
+    });
+    ws.on("close", () => {
+      if (runner === ws) runner = null;
+      console.warn("Execution worker disconnected.");
+      for (const room of rooms.values()) broadcast(room, { type: "error", message: "Execution host disconnected. Existing sessions are unavailable until it reconnects." });
+    });
+    return;
+  }
+
   const url = new URL(req.url, "http://localhost");
   const room = rooms.get((url.searchParams.get("room") || "").toUpperCase());
   if (!room) { send(ws, { type: "error", message: "Room not found; the host may have disconnected or the server restarted." }); ws.close(); return; }
@@ -75,7 +123,7 @@ wss.on("connection", (ws, req) => {
     for (const [peer, info] of room.clients) if (info.owner) send(peer, { type: "request", clientId: client.id });
   }
 
-  ws.on("message", async raw => {
+  ws.on("message", raw => {
     let message;
     try { message = JSON.parse(raw.toString()); } catch { return; }
     if (message.type === "approve" && client.owner) {
@@ -94,21 +142,11 @@ wss.on("connection", (ws, req) => {
     if (!client.owner && !client.approved) return send(ws, { type: "error", message: "The host has not approved your access." });
     const command = String(message.command || "").trim();
     if (!command || command.length > 2000) return;
+    if (!runner || runner.readyState !== WebSocket.OPEN) return send(ws, { type: "error", message: "Execution host is offline." });
     if (room.busy) return send(ws, { type: "error", message: "A command is already running." });
     room.busy = true;
     broadcast(room, { type: "command", command, by: client.id });
-    try {
-      const stream = await render.sandboxes.exec(room.sandboxId, command);
-      let exitSeen = false;
-      for await (const event of stream) {
-        if (event.type === "output") broadcast(room, { type: "output", stream: event.stream, data: event.data });
-        if (event.type === "exit") { exitSeen = true; broadcast(room, { type: "exit", code: event.exit_code }); }
-      }
-      if (!exitSeen) broadcast(room, { type: "error", message: "Command stream ended without a confirmed exit status." });
-    } catch (error) {
-      console.error("Sandbox execution failed", error);
-      broadcast(room, { type: "error", message: "Command execution failed in the sandbox." });
-    } finally { room.busy = false; broadcast(room, { type: "ready" }); }
+    runner.send(JSON.stringify({ type: "exec", roomId: room.id, requestId: crypto.randomUUID(), command }));
   });
 
   ws.on("close", () => {
@@ -116,7 +154,7 @@ wss.on("connection", (ws, req) => {
     if (client.owner) {
       broadcast(room, { type: "host_left" });
       rooms.delete(room.id);
-      if (room.sandboxId) render.sandboxes.terminate(room.sandboxId).catch(err => console.error("Sandbox cleanup failed", room.sandboxId, err));
+      if (runner?.readyState === WebSocket.OPEN) send(runner, { type: "destroy", roomId: room.id });
     }
   });
 });
