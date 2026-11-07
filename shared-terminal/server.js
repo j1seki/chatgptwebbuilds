@@ -106,7 +106,7 @@ wss.on("connection", (ws, req, isWorker) => {
     ws.on("close", () => {
       if (runner === ws) runner = null;
       console.warn("Execution worker disconnected.");
-      for (const room of rooms.values()) broadcast(room, { type: "error", message: "Execution host disconnected. Existing sessions are unavailable until it reconnects." });
+      for (const room of rooms.values()) { room.busy = false; broadcast(room, { type: "error", message: "Execution host disconnected. Existing sessions are unavailable until it reconnects." }); broadcast(room, { type: "ready" }); }
     });
     return;
   }
