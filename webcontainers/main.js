@@ -145,31 +145,12 @@ async function boot() {
   }
 }
 function tokenizeCommand(command) {
-  const tokens = [];
-  let token = '';
-  let quote = '';
-  let escaped = false;
-  for (const character of command) {
-    if (escaped) {
-      token += character;
-      escaped = false;
-    } else if (character === '\\\\' && quote !== "'") {
-      escaped = true;
-    } else if (quote) {
-      if (character === quote) quote = '';
-      else token += character;
-    } else if (character === "'" || character === '"') {
-      quote = character;
-    } else if (/\\s/.test(character)) {
-      if (token) { tokens.push(token); token = ''; }
-    } else {
-      token += character;
-    }
-  }
-  if (escaped) token += '\\\\';
-  if (quote) throw new Error('Unclosed quote in command.');
-  if (token) tokens.push(token);
-  return tokens;
+  const matches = command.match(/(?:[^\s"']+|"[^"]*"|'[^']*')+/g) || [];
+  return matches.map((part) => {
+    if (part.startsWith('"') && part.endsWith('"')) return part.slice(1, -1);
+    if (part.startsWith("'") && part.endsWith("'")) return part.slice(1, -1);
+    return part;
+  });
 }
 async function runCommand(command) {
   if (!webcontainer || commandBusy || !command.trim()) return;
