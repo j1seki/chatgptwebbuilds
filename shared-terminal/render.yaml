@@ -13,5 +13,19 @@ services:
         value: production
       - key: RENDER_API_KEY
         sync: false
+      - key: RENDER_WORKSPACE_ID
+        value: tea-dbn9pb0u01pc73c4pmug
       - key: FRONTEND_ORIGIN
-        value: "*"
+        value: https://shared-terminal-ui.onrender.com
+
+  - type: web
+    name: shared-terminal-ui
+    runtime: static
+    rootDir: shared-terminal
+    plan: free
+    region: ohio
+    buildCommand: mkdir -p public && cp index.html public/index.html && printf 'window.API_BASE="%s";' "$VITE_API_URL" > public/config.js
+    staticPublishPath: ./public
+    envVars:
+      - key: VITE_API_URL
+        value: https://shared-terminal-api.onrender.com

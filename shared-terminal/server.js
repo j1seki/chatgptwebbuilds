@@ -9,39 +9,33 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ noServer: true, maxPayload: 8192 });
 const rooms = new Map();
 const port = Number(process.env.PORT || 3001);
-const frontendOrigin = process.env.FRONTEND_ORIGIN || "*";
-const render = process.env.RENDER_API_KEY
-  ? new Render({ token: process.env.RENDER_API_KEY })
-  : null;
+const frontendOrigin = process.env.FRONTEND_ORIGIN || "";
+const render = process.env.RENDER_API_KEY && process.env.RENDER_WORKSPACE_ID ? new Render() : null;
 
-app.use(express.json());
+app.use(express.json({ limit: "8kb" }));
 app.get("/health", (_req, res) => res.json({ ok: true, sandboxEnabled: Boolean(render) }));
-app.get("/", (_req, res) => res.sendFile(new URL("./index.html", import.meta.url).pathname));
 
 app.post("/api/rooms", async (_req, res) => {
-  if (!render) return res.status(503).json({ error: "Render Sandboxes are not configured. Set RENDER_API_KEY on the API service." });
+  if (!render) return res.status(503).json({ error: "Render Sandboxes are not configured. Set RENDER_API_KEY and RENDER_WORKSPACE_ID on the API service." });
   const id = crypto.randomBytes(5).toString("hex").toUpperCase();
   const ownerToken = crypto.randomBytes(32).toString("hex");
-  const room = { id, ownerToken, sandboxId: null, clients: new Map(), busy: false, createdAt: Date.now() };
+  const room = { id, ownerToken, sandboxId: null, clients: new Map(), busy: false };
   rooms.set(id, room);
   try {
-    const sandbox = await render.sandboxes.create({
-      timeoutSeconds: 3600,
-      networkPolicy: { type: "deny-all" }
-    });
+    const sandbox = await render.sandboxes.create({ timeoutSeconds: 3600, networkPolicy: { type: "deny-all" } });
     room.sandboxId = sandbox.id;
     await render.sandboxes.waitUntilRunning(sandbox.id, { timeoutMs: 120000 });
     res.status(201).json({ roomId: id, ownerToken });
   } catch (error) {
     rooms.delete(id);
     console.error("Sandbox provisioning failed", error);
-    res.status(502).json({ error: "Could not provision the isolated terminal sandbox. Confirm Sandboxes are enabled and the API key is valid." });
+    res.status(502).json({ error: "Could not provision the isolated sandbox. Confirm Sandboxes are enabled and the API key is valid." });
   }
 });
 
 server.on("upgrade", (req, socket, head) => {
   const origin = req.headers.origin;
-  if (frontendOrigin !== "*" && origin && origin !== frontendOrigin) {
+  if (frontendOrigin && origin && origin !== frontendOrigin) {
     socket.write("HTTP/1.1 403 Forbidden\r\n\r\n"); socket.destroy(); return;
   }
   wss.handleUpgrade(req, socket, head, ws => wss.emit("connection", ws, req));
@@ -57,7 +51,7 @@ function sameSecret(a, b) {
 wss.on("connection", (ws, req) => {
   const url = new URL(req.url, "http://localhost");
   const room = rooms.get((url.searchParams.get("room") || "").toUpperCase());
-  if (!room) { send(ws, { type: "error", message: "Room not found (the host may have disconnected or the server restarted)." }); ws.close(); return; }
+  if (!room) { send(ws, { type: "error", message: "Room not found; the host may have disconnected or the server restarted." }); ws.close(); return; }
   const owner = sameSecret(url.searchParams.get("token"), room.ownerToken);
   const client = { id: crypto.randomUUID(), owner, approved: owner };
   room.clients.set(ws, client);
@@ -113,4 +107,4 @@ wss.on("connection", (ws, req) => {
   });
 });
 
-server.listen(port, () => console.log(`Shared terminal listening on ${port}`));
+server.listen(port, () => console.log(`Shared terminal API listening on ${port}`));
