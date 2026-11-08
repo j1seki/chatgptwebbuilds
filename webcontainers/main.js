@@ -15,10 +15,9 @@ const preview = $('#preview');
 const empty = $('#empty');
 
 let container = null;
-let activeProcess = null;
+const processes = new Set();
 let booting = false;
 let serverReady = false;
-let firstVisitTimer;
 
 function print(message, kind = '') {
   const line = document.createElement('div');
@@ -94,16 +93,12 @@ async function boot() {
 
 async function runCommand(command) {
   if (!container || !command.trim()) return;
-  if (activeProcess) {
-    print('A process is already running. Stop it before starting another command.', 'err');
-    return;
-  }
   print('$ ' + command, 'cmd');
   runButton.disabled = true;
-  commandInput.disabled = true;
   try {
     const process = await container.spawn('jsh', ['-c', command]);
-    activeProcess = process;
+    processes.add(process);
+    runButton.disabled = false;
     const reader = process.output.getReader();
     (async () => {
       try {
@@ -117,22 +112,14 @@ async function runCommand(command) {
       }
     })();
     process.exit.then((code) => {
-      if (activeProcess === process) activeProcess = null;
-      runButton.disabled = false;
-      commandInput.disabled = false;
-      stopButton.disabled = !container;
+      processes.delete(process);
       if (code !== 0) print('Process exited with code ' + code, 'muted');
-      if (!serverReady) commandInput.focus();
     }).catch((error) => {
-      if (activeProcess === process) activeProcess = null;
-      runButton.disabled = false;
-      commandInput.disabled = false;
+      processes.delete(process);
       print('Process error: ' + error.message, 'err');
     });
   } catch (error) {
-    activeProcess = null;
     runButton.disabled = false;
-    commandInput.disabled = false;
     print('ERROR: ' + error.message, 'err');
   }
 }
@@ -153,10 +140,6 @@ $('#exampleList').addEventListener('click', (event) => {
 });
 async function stopContainer() {
   if (!container) return;
-  if (activeProcess) {
-    try { activeProcess.kill(); } catch {}
-    activeProcess = null;
-  }
   const current = container;
   container = null;
   serverReady = false;
@@ -164,6 +147,7 @@ async function stopContainer() {
   preview.hidden = true;
   empty.hidden = false;
   try { await current.teardown(); } catch (error) { print('Container stopped: ' + error.message, 'muted'); }
+  processes.clear();
   commandInput.value = '';
   commandInput.disabled = true;
   runButton.disabled = true;
@@ -179,4 +163,4 @@ document.querySelectorAll('.example').forEach((button) => {
   button.title = 'Run: ' + button.dataset.command;
 });
 menuButton.classList.add('force-visible');
-firstVisitTimer = window.setTimeout(() => menuButton.classList.remove('force-visible'), 10000);
+window.setTimeout(() => menuButton.classList.remove('force-visible'), 10000);
