@@ -65,7 +65,7 @@ async function boot() {
     if (!window.crossOriginIsolated || !window.SharedArrayBuffer) {
       throw new Error('Cross-origin isolation is not active. Reload the page once, then open the terminal again.');
     }
-    container = await WebContainer.boot();
+    container = await WebContainer.boot({ coep: 'credentialless' });
     container.on('server-ready', (port, url) => {
       serverReady = true;
       preview.src = url;
