@@ -97,6 +97,8 @@ await writeFile(OUT, JSON.stringify({
   source: {
     name: "Models.dev provider catalog",
     url: CATALOG_URL,
+    usageUrl: USAGE_URL,
+    usageUpdatedAt: usage.updatedAt || null,
     providerPage: "https://models.dev/providers/opencode/",
     methodology: "Only models with explicitly numeric $0.00 input AND $0.00 output prices are included."
   },
