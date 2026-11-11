@@ -104,6 +104,7 @@ const currentModels = officialFreeModels.map(official => {
   return {
     id: official.id,
     name: official.name,
+    modelType: official.id.startsWith("jev-") ? "structured-decision" : "chat",
     provider: PROVIDER_ID,
     providerName: provider.name || "OpenCode",
     context: numberOrNull(model.limit?.context),
