@@ -10,7 +10,7 @@ async function getJson(url) {
   return response.json();
 }
 
-const zero = value => value === 0 || value === "0" || value === null;
+const zero = value => value === 0 || value === "0";
 const asNumber = value => Number.isFinite(Number(value)) ? Number(value) : null;
 
 function normalizeCatalog(raw) {
@@ -46,7 +46,7 @@ function normalizeCatalog(raw) {
 
 function liveIds(payload) {
   const rows = Array.isArray(payload) ? payload : (payload?.data || payload?.models || []);
-  return new Set(rows.map(item => item.id || item.model).filter(Boolean));
+  return new Set(rows.map(item => item.id || item.model).filter(Boolean).map(id => String(id).split("/").pop()));
 }
 
 const previous = await readFile(OUT, "utf8").then(JSON.parse).catch(() => null);
