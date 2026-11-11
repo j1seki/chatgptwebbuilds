@@ -3,6 +3,10 @@ on:
   schedule:
     - cron: "0 */6 * * *"
   workflow_dispatch:
+  push:
+    paths:
+      - "scripts/refresh-opencode-catalog.mjs"
+      - ".github/workflows/refresh-opencode-catalog.yml"
 permissions:
   contents: write
 concurrency:
