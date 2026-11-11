@@ -88,7 +88,7 @@ const liveRows = Array.isArray(liveModelPayload?.data) ? liveModelPayload.data
   : [];
 const liveIds = new Set(liveRows.map(row => {
   const id = typeof row === "string" ? row : row?.id;
-  return typeof id === "string" ? id.replace(/^opencode\\//, "") : null;
+  return typeof id === "string" ? id.replace(/^opencode\//, "") : null;
 }).filter(Boolean));
 if (!liveIds.size) throw new Error("OpenCode live models endpoint returned no model IDs. Refusing to overwrite the last good snapshot.");
 const officialFreeModels = documentedFreeModels.filter(model => liveIds.has(model.id));
