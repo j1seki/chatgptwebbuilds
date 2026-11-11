@@ -47,7 +47,7 @@ function render(){
  const ranked=[...active].filter(m=>m.usage7dTokens!=null).sort((a,b)=>b.usage7dTokens-a.usage7dTokens);
  $('leader').innerHTML=ranked.slice(0,3).map((m,i)=>'<article class="leadcard"><div class="rank">#'+(i+1)+' / OPENCODE PAST 7 DAYS</div><h3>'+esc(m.name)+'</h3><p>'+esc(m.id)+'</p><div class="score">'+tokenFmt(m.usage7dTokens)+'</div><p>Tokens used · '+(m.usageChangePercent==null?'change n/a':(m.usageChangePercent>0?'+':'')+m.usageChangePercent+'% vs previous week')+'</p></article>').join('')||'<div class="panel muted">No matched current-model usage data in this snapshot.</div>';
  function modelRow(m){
-  const capabilities=[m.reasoning?'Reasoning':'',m.toolCall?'Tools':'',m.vision?'Vision':''].filter(Boolean).join(' · ')||'—';
+  const capabilities=m.modelType==='structured-decision'?'Structured decision · non-chat':[m.reasoning?'Reasoning':'',m.toolCall?'Tools':'',m.vision?'Vision':''].filter(Boolean).join(' · ')||'—';
   return '<tr class="'+(m.status==='historical'?'historical-row':'')+'"><td><span class="modelname">'+esc(m.name)+'</span><span class="modelid">'+esc(m.provider+'/'+m.id)+'</span></td><td>'+status(m)+'</td><td>'+fmt(m.context)+'</td><td>'+fmt(m.output)+'</td><td>'+(m.usage7dTokens!=null?tokenFmt(m.usage7dTokens):'<span class="muted">Not ranked</span>')+'</td><td>'+(m.tps!=null?Number(m.tps).toFixed(1)+' tok/s':'<span class="muted">Not measured</span>')+'</td><td class="cap">'+esc(capabilities)+'</td><td>$'+Number(m.inputCost||0).toFixed(2)+'</td></tr>';
  }
  $('rows').innerHTML=list.map(modelRow).join('')||'<tr><td colspan="8" class="empty">No matching models.</td></tr>';
