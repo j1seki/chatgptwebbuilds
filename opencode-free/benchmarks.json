@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-11T00:00:00.000Z",
+  "source": "Open LLM Radar mirror of Artificial Analysis Intelligence Index",
+  "methodologyUrl": "https://artificialanalysis.ai/methodology/intelligence-benchmarking",
+  "sourceUrl": "https://open-llm-radar.com/benchmarks/aa-intelligence-index",
+  "notes": "Scores are included only when a model-specific result and provenance are published. Catalog entries are joined by exact OpenCode model ID. No family-level inference or usage-based estimates are used.",
+  "models": [
+    {
+      "id": "glm-5.3-flash-free",
+      "score": 57,
+      "benchmark": "Artificial Analysis Intelligence Index v5.0.1",
+      "date": "2026-08-27",
+      "source": "Open LLM Radar; marked verified on its benchmark score listing",
+      "sourceUrl": "https://open-llm-radar.com/benchmarks/aa-intelligence-index"
+    }
+  ]
+}

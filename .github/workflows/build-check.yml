@@ -13,6 +13,8 @@ jobs:
           node-version: 22
       - run: npm install
       - run: npm run build
+      - name: Check OpenCode catalog refresh script
+        run: node --check scripts/refresh-opencode-catalog.mjs
       - name: Build shared terminal
         run: npm install && npm run build
         working-directory: shared-terminal
