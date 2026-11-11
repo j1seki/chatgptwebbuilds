@@ -21,16 +21,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Refresh catalog snapshot
-        run: node scripts/refresh-opencode-catalog.mjs
-      - name: Commit updated snapshot
+      - name: Refresh and commit catalog snapshot
         run: |
-          if git diff --quiet -- opencode-free/data.json; then
-            echo "Catalog unchanged."
-            exit 0
-          fi
+          node scripts/refresh-opencode-catalog.mjs
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add opencode-free/data.json
-          git commit -m "chore: refresh OpenCode free model catalog"
-          git push
+          if git diff --cached --quiet; then
+            echo "Catalog snapshot unchanged."
+          else
+            git commit -m "chore: refresh OpenCode free model catalog"
+            git push
+          fi
