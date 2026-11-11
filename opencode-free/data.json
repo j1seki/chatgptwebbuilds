@@ -1,6 +1,6 @@
 {
   "schemaVersion": 3,
-  "updatedAt": "2026-11-11T19:29:15.143Z",
+  "updatedAt": "2026-11-11T20:04:45.876Z",
   "refreshHours": 6,
   "provider": "OpenCode",
   "currentCount": 12,
@@ -10,9 +10,10 @@
     "officialDocsUrl": "https://opencode.ai/docs/console/models.md",
     "liveModelsApiUrl": "https://opencode.ai/inference/v1/models",
     "catalogUrl": "https://models.dev/api.json?type=all",
+    "benchmarkFile": "opencode-free/benchmarks.json",
+    "benchmarkUpdatedAt": "2026-11-11T00:00:00.000Z",
     "providerPage": "https://models.dev/providers/opencode/",
-    "methodology": "Current models must appear in OpenCode's live /inference/v1/models response, appear in its official endpoint table, and have both input and output marked Free in its official pricing table. Models.dev is used only for context/capability metadata. Intelligence scores are joined by exact model ID from benchmarks.json; missing scores remain null. Previous snapshots are retained as history.",
-    "benchmarkFile": "benchmarks.json"
+    "methodology": "Current models must appear in OpenCode's live /inference/v1/models response, appear in its official endpoint table, and have both input and output marked Free in its official pricing table. Models.dev is used only for context/capability metadata. Intelligence scores are joined by exact model ID from the separately maintained benchmark snapshot; missing scores remain null. Previous snapshots are retained as history."
   },
   "statusNote": "CURRENTLY LISTED means the model appears in OpenCode's live models API and official docs mark both input and output free. This confirms catalog availability, not a successful inference request; account, project, region, and quota restrictions may still apply.",
   "tpsNote": "No measured TPS is published by these sources. TPS remains unavailable until a reproducible benchmark source is integrated.",
@@ -46,13 +47,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "iceman-free",
@@ -82,13 +83,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "inkling-2-small-free",
@@ -119,13 +120,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "glm-5.3-flash-free",
@@ -157,13 +158,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": 57,
       "intelligenceBenchmark": "Artificial Analysis Intelligence Index v5.0.1",
       "intelligenceDate": "2026-08-27",
-      "intelligenceSource": "Open LLM Radar; marked verified on its benchmark score listing",
-      "intelligenceSourceUrl": "https://open-llm-radar.com/benchmarks/aa-intelligence-index"
+      "intelligenceSourceUrl": "https://open-llm-radar.com/benchmarks/aa-intelligence-index",
+      "intelligenceSource": "Open LLM Radar; marked verified on its benchmark score listing"
     },
     {
       "id": "deepseek-v4.1-flash-free",
@@ -194,13 +195,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "minimax-m3.1-flash-free",
@@ -232,13 +233,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "beam-free",
@@ -268,13 +269,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "flint-40b-free",
@@ -304,13 +305,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "longcat-2.5-free",
@@ -341,13 +342,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "mimo-v2.6-flash-free",
@@ -380,13 +381,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "nemotron-3.5-lightning-free",
@@ -416,13 +417,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "nemotron-3.5-super-vl-free",
@@ -453,13 +454,13 @@
       "status": "available",
       "statusVerified": true,
       "statusSource": "https://opencode.ai/docs/console/models.md",
-      "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
+      "availabilityCheckedAt": "2026-11-11T20:04:45.876Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
       "intelligenceScore": null,
       "intelligenceBenchmark": null,
       "intelligenceDate": null,
-      "intelligenceSource": null,
-      "intelligenceSourceUrl": null
+      "intelligenceSourceUrl": null,
+      "intelligenceSource": null
     },
     {
       "id": "cat-jam-free",
@@ -1823,10 +1824,5 @@
       "intelligenceSource": null,
       "intelligenceSourceUrl": null
     }
-  ],
-  "benchmarkSource": {
-    "name": "Artificial Analysis Intelligence Index",
-    "url": "https://artificialanalysis.ai/models",
-    "mirror": "https://open-llm-radar.com/benchmarks/aa-intelligence-index"
-  }
+  ]
 }
