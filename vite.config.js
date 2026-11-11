@@ -8,7 +8,7 @@ export default defineConfig({
       input: {
         home: 'index.html',
         webcontainers: 'webcontainers/index.html',
-        apiLab: 'api-lab/index.html'
+        apiLab: 'api-lab/index.html',\n        opencodeFree: 'opencode-free/index.html'
       }
     }
   }
