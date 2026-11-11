@@ -1,11 +1,13 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-11-11T08:38:59.583Z",
+  "updatedAt": "2026-11-11T08:39:28.994Z",
   "refreshHours": 6,
   "provider": "OpenCode",
   "source": {
     "name": "Models.dev provider catalog",
     "url": "https://models.dev/api.json?type=all",
+    "usageUrl": "https://opencode.ai/data/index.json",
+    "usageUpdatedAt": "2026-11-11T08:09:29.000Z",
     "providerPage": "https://models.dev/providers/opencode/",
     "methodology": "Only models with explicitly numeric $0.00 input AND $0.00 output prices are included."
   },
