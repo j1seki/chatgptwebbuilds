@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const CATALOG_URL = "https://models.dev/api.json?type=all";
 const PROVIDER_ID = "opencode";
+const USAGE_URL = "https://opencode.ai/data/index.json";
 const OUT = "opencode-free/data.json";
 
 async function getJson(url) {
@@ -53,17 +54,39 @@ function normalizeCatalog(raw) {
   return found.sort((a,b) => (b.context || 0) - (a.context || 0));
 }
 
-const previous = await readFile(OUT, "utf8").then(JSON.parse).catch(() => null);
 const catalog = await getJson(CATALOG_URL);
 const models = normalizeCatalog(catalog);
+const usage = await getJson(USAGE_URL);
+if (!Array.isArray(usage?.leaderboard?.pastWeek) || !Array.isArray(usage?.leaderboard?.pastDay)) throw new Error("OpenCode usage API response missing pastWeek/pastDay leaderboards.");
 if (!models.length) throw new Error("OpenCode provider returned zero explicitly free models. Refusing to overwrite last good snapshot.");
 
 const updatedAt = new Date().toISOString();
-const enriched = models.map(model => ({
-  ...model,
-  status: model.lifecycle === "deprecated" ? "deprecated" : "listed-by-models.dev",
-  statusVerified: true
-}));
+const aliases = id => {
+  const values = new Set([id]);
+  for (const suffix of ["-contributor-free", "-preview-free", "-free"]) {
+    if (id.endsWith(suffix)) values.add(id.slice(0, -suffix.length));
+  }
+  return [...values];
+};
+const weekly = new Map(usage.leaderboard.pastWeek.map(row => [row.model, row]));
+const daily = new Map(usage.leaderboard.pastDay.map(row => [row.model, row]));
+const enriched = models.map(model => {
+  const matchKey = aliases(model.id).find(id => weekly.has(id) || daily.has(id));
+  const week = matchKey ? weekly.get(matchKey) : null;
+  const day = matchKey ? daily.get(matchKey) : null;
+  return {
+    ...model,
+    status: model.lifecycle === "deprecated" ? "deprecated" : "listed-by-models.dev",
+    statusVerified: true,
+    usageModelId: matchKey || null,
+    usageRank7d: week?.rank ?? null,
+    usage7dTokens: week?.tokens ?? null,
+    usageChangePercent: week?.changePercent ?? null,
+    usageRank24h: day?.rank ?? null,
+    usage24hTokens: day?.tokens ?? null,
+    usageSource: matchKey ? USAGE_URL : null
+  };
+});
 
 await mkdir("opencode-free", { recursive: true });
 await writeFile(OUT, JSON.stringify({
@@ -79,7 +102,7 @@ await writeFile(OUT, JSON.stringify({
   },
   statusNote: "Listed by the OpenCode provider catalog in Models.dev. This is catalog status, not a live inference/uptime check.",
   tpsNote: "No measured TPS is published by this source. TPS remains unavailable until a reproducible benchmark source is integrated.",
-  leaderboardNote: "This is a specifications leaderboard sorted by context size. It is not a coding-quality or speed benchmark.",
+  leaderboardNote: "Official OpenCode past-week and past-day token usage leaderboard, joined to models with explicitly zero input and output prices. Usage is popularity, not coding quality.",
   models: enriched
 }, null, 2) + "\n");
-console.log(`Updated ${enriched.length} explicitly free OpenCode models from ${CATALOG_URL}`);
+console.log(`Updated ${enriched.length} explicitly free OpenCode models and joined official OpenCode usage rankings`);
