@@ -4,9 +4,7 @@ on:
     - cron: "0 */6 * * *"
   workflow_dispatch:
   push:
-    paths:
-      - "scripts/refresh-opencode-catalog.mjs"
-      - ".github/workflows/refresh-opencode-catalog.yml"
+    branches: [main]
 permissions:
   contents: write
 concurrency:
@@ -14,6 +12,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   refresh:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
