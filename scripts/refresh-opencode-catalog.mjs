@@ -4,6 +4,7 @@ const CATALOG_URL = "https://models.dev/api.json?type=all";
 const PROVIDER_ID = "opencode";
 const USAGE_URL = "https://opencode.ai/data/index.json";
 const OFFICIAL_MODELS_DOCS = "https://opencode.ai/docs/console/models.md";
+const OFFICIAL_MODELS_API = "https://opencode.ai/inference/v1/models";
 const OUT = "opencode-free/data.json";
 
 async function getJson(url) {
@@ -66,10 +67,11 @@ function normalizeCatalog(raw) {
   return { provider, byId };
 }
 
-const [catalog, usage, officialDocs, previousText] = await Promise.all([
+const [catalog, usage, officialDocs, liveModelPayload, previousText] = await Promise.all([
   getJson(CATALOG_URL),
   getJson(USAGE_URL),
   getText(OFFICIAL_MODELS_DOCS),
+  getJson(OFFICIAL_MODELS_API),
   readFile(OUT, "utf8").catch(() => null)
 ]);
 
@@ -77,7 +79,20 @@ if (!Array.isArray(usage?.leaderboard?.pastWeek) || !Array.isArray(usage?.leader
   throw new Error("OpenCode usage API response missing pastWeek/pastDay leaderboards.");
 }
 
-const officialFreeModels = parseOfficialFreeModels(officialDocs);
+const documentedFreeModels = parseOfficialFreeModels(officialDocs);
+const liveRows = Array.isArray(liveModelPayload?.data) ? liveModelPayload.data
+  : Array.isArray(liveModelPayload?.models) ? liveModelPayload.models
+  : Array.isArray(liveModelPayload) ? liveModelPayload
+  : liveModelPayload?.data && typeof liveModelPayload.data === "object" ? Object.values(liveModelPayload.data)
+  : liveModelPayload?.models && typeof liveModelPayload.models === "object" ? Object.values(liveModelPayload.models)
+  : [];
+const liveIds = new Set(liveRows.map(row => {
+  const id = typeof row === "string" ? row : row?.id;
+  return typeof id === "string" ? id.replace(/^opencode\\//, "") : null;
+}).filter(Boolean));
+if (!liveIds.size) throw new Error("OpenCode live models endpoint returned no model IDs. Refusing to overwrite the last good snapshot.");
+const officialFreeModels = documentedFreeModels.filter(model => liveIds.has(model.id));
+if (!officialFreeModels.length) throw new Error("No documented free models were confirmed by OpenCode's live models endpoint. Refusing to overwrite the last good snapshot.");
 const { provider, byId } = normalizeCatalog(catalog);
 const previous = previousText ? JSON.parse(previousText) : { models: [] };
 const previousModels = Array.isArray(previous.models) ? previous.models : [];
@@ -165,13 +180,14 @@ await writeFile(OUT, JSON.stringify({
   source: {
     name: "OpenCode official free-model pricing + endpoint docs, enriched with Models.dev metadata",
     officialDocsUrl: OFFICIAL_MODELS_DOCS,
+    liveModelsApiUrl: OFFICIAL_MODELS_API,
     catalogUrl: CATALOG_URL,
     usageUrl: USAGE_URL,
     usageUpdatedAt: usage.updatedAt || null,
     providerPage: "https://models.dev/providers/opencode/",
-    methodology: "Current models must appear in OpenCode's official endpoint table and have both input and output marked Free in its official pricing table. Models.dev is used only for context/capability metadata. Previous snapshots are retained as history."
+    methodology: "Current models must appear in OpenCode's live /inference/v1/models response, appear in its official endpoint table, and have both input and output marked Free in its official pricing table. Models.dev is used only for context/capability metadata. Previous snapshots are retained as history."
   },
-  statusNote: "CURRENTLY LISTED means OpenCode's official docs currently list the model and mark both input and output free. It is not a live request/uptime test; account, project, region, and quota restrictions may still apply.",
+  statusNote: "CURRENTLY LISTED means the model appears in OpenCode's live models API and official docs mark both input and output free. This confirms catalog availability, not a successful inference request; account, project, region, and quota restrictions may still apply.",
   tpsNote: "No measured TPS is published by these sources. TPS remains unavailable until a reproducible benchmark source is integrated.",
   leaderboardNote: "Official OpenCode past-week and past-day token usage leaderboard, joined to currently free models. Usage is popularity, not coding quality.",
   models
