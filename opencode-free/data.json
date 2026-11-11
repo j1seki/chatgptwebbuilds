@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-11T00:00:00.000Z",
+  "refreshHours": 6,
+  "sources": {
+    "catalog": "https://models.dev/api.json?type=all",
+    "live": "https://opencode.ai/inference/v1/models",
+    "docs": "https://opencode.ai/docs/models"
+  },
+  "statusNote": "Initial page setup; next scheduled GitHub Actions run will populate the live catalog.",
+  "leaderboardNote": "Metadata score only (context, output, reasoning, tool calling, and vision). It is not a quality or speed benchmark.",
+  "models": []
+}
