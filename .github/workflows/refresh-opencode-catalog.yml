@@ -1,0 +1,33 @@
+name: Refresh OpenCode free model catalog
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: opencode-catalog-refresh
+  cancel-in-progress: true
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Refresh catalog snapshot
+        run: node scripts/refresh-opencode-catalog.mjs
+      - name: Commit updated snapshot
+        run: |
+          if git diff --quiet -- opencode-free/data.json; then
+            echo "Catalog unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add opencode-free/data.json
+          git commit -m "chore: refresh OpenCode free model catalog"
+          git push
