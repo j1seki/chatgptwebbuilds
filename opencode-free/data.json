@@ -10,14 +10,13 @@
     "officialDocsUrl": "https://opencode.ai/docs/console/models.md",
     "liveModelsApiUrl": "https://opencode.ai/inference/v1/models",
     "catalogUrl": "https://models.dev/api.json?type=all",
-    "usageUrl": "https://opencode.ai/data/index.json",
-    "usageUpdatedAt": "2026-11-11T19:10:04.000Z",
     "providerPage": "https://models.dev/providers/opencode/",
-    "methodology": "Current models must appear in OpenCode's live /inference/v1/models response, appear in its official endpoint table, and have both input and output marked Free in its official pricing table. Models.dev is used only for context/capability metadata. Previous snapshots are retained as history."
+    "methodology": "Current models must appear in OpenCode's live /inference/v1/models response, appear in its official endpoint table, and have both input and output marked Free in its official pricing table. Models.dev is used only for context/capability metadata. Intelligence scores are joined by exact model ID from benchmarks.json; missing scores remain null. Previous snapshots are retained as history.",
+    "benchmarkFile": "benchmarks.json"
   },
   "statusNote": "CURRENTLY LISTED means the model appears in OpenCode's live models API and official docs mark both input and output free. This confirms catalog availability, not a successful inference request; account, project, region, and quota restrictions may still apply.",
   "tpsNote": "No measured TPS is published by these sources. TPS remains unavailable until a reproducible benchmark source is integrated.",
-  "leaderboardNote": "Official OpenCode past-week and past-day token usage leaderboard, joined to currently free models. Usage is popularity, not coding quality.",
+  "leaderboardNote": "Models are ranked by independently measured Artificial Analysis Intelligence Index scores where an exact model-ID match exists. Usage/popularity data is not used. Unbenchmarked models are not assigned scores.",
   "models": [
     {
       "id": "big-pickle",
@@ -49,13 +48,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "iceman-free",
@@ -87,13 +84,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "iceman",
-      "usageRank7d": 17,
-      "usage7dTokens": 506000000000,
-      "usageChangePercent": -13,
-      "usageRank24h": 14,
-      "usage24hTokens": 80000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "inkling-2-small-free",
@@ -126,13 +121,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "inkling-2-small",
-      "usageRank7d": 8,
-      "usage7dTokens": 2833000000000,
-      "usageChangePercent": null,
-      "usageRank24h": 6,
-      "usage24hTokens": 634000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "glm-5.3-flash-free",
@@ -166,13 +159,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "glm-5.3-flash",
-      "usageRank7d": 2,
-      "usage7dTokens": 7869000000000,
-      "usageChangePercent": 16,
-      "usageRank24h": 3,
-      "usage24hTokens": 1134000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": 57,
+      "intelligenceBenchmark": "Artificial Analysis Intelligence Index v5.0.1",
+      "intelligenceDate": "2026-08-27",
+      "intelligenceSource": "Open LLM Radar; marked verified on its benchmark score listing",
+      "intelligenceSourceUrl": "https://open-llm-radar.com/benchmarks/aa-intelligence-index"
     },
     {
       "id": "deepseek-v4.1-flash-free",
@@ -205,13 +196,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "deepseek-v4.1-flash",
-      "usageRank7d": 1,
-      "usage7dTokens": 166450000000000,
-      "usageChangePercent": 9,
-      "usageRank24h": 1,
-      "usage24hTokens": 22439000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "minimax-m3.1-flash-free",
@@ -245,13 +234,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "minimax-m3.1-flash",
-      "usageRank7d": 6,
-      "usage7dTokens": 3473000000000,
-      "usageChangePercent": 452,
-      "usageRank24h": 2,
-      "usage24hTokens": 1779000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "beam-free",
@@ -283,13 +270,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "flint-40b-free",
@@ -321,13 +306,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "flint-40b",
-      "usageRank7d": 18,
-      "usage7dTokens": 503000000000,
-      "usageChangePercent": -25,
-      "usageRank24h": 17,
-      "usage24hTokens": 55000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "longcat-2.5-free",
@@ -360,13 +343,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "longcat-2.5",
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": 18,
-      "usage24hTokens": 52000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "mimo-v2.6-flash-free",
@@ -401,13 +382,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "mimo-v2.6-flash",
-      "usageRank7d": 5,
-      "usage7dTokens": 3505000000000,
-      "usageChangePercent": -4,
-      "usageRank24h": 7,
-      "usage24hTokens": 451000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "nemotron-3.5-lightning-free",
@@ -439,13 +418,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "nemotron-3.5-lightning",
-      "usageRank7d": 15,
-      "usage7dTokens": 658000000000,
-      "usageChangePercent": 4,
-      "usageRank24h": 15,
-      "usage24hTokens": 65000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "nemotron-3.5-super-vl-free",
@@ -478,13 +455,11 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T19:29:15.143Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": "nemotron-3.5-super-vl",
-      "usageRank7d": 7,
-      "usage7dTokens": 3462000000000,
-      "usageChangePercent": 174,
-      "usageRank24h": 8,
-      "usage24hTokens": 366000000000,
-      "usageSource": "https://opencode.ai/data/index.json"
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "cat-jam-free",
@@ -512,14 +487,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "crouton-alpha-free",
@@ -550,14 +523,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "deepseek-v4-flash-free",
@@ -585,14 +556,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "exo-free",
@@ -621,14 +590,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "fledge-alpha-free",
@@ -657,14 +624,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "glm-4.7-free",
@@ -692,14 +657,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "glm-5-free",
@@ -727,14 +690,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "grok-code",
@@ -762,14 +723,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "hy3-free",
@@ -797,14 +756,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "hy3-preview-free",
@@ -832,14 +789,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "jev-1.13-free",
@@ -872,14 +827,12 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T08:47:54.791Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": "2026-11-11T08:49:37.128Z"
+      "removedAt": "2026-11-11T08:49:37.128Z",
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "kimi-k2.5-free",
@@ -909,14 +862,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "laguna-s-2.1-free",
@@ -944,14 +895,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "ling-2.6-flash-free",
@@ -979,14 +928,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "ling-3.0-flash-fin-free",
@@ -1014,14 +961,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "ling-3.1-flash-free",
@@ -1049,14 +994,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "ling-3.0-flash-free",
@@ -1084,14 +1027,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "ling-3.0-tiny-free",
@@ -1119,14 +1060,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "ll-alpha-free",
@@ -1154,14 +1093,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "longcat-2.5-preview-free",
@@ -1190,14 +1127,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": "longcat-2.5",
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": 17,
-      "usage24hTokens": 23000000000,
-      "usageSource": "https://opencode.ai/data/index.json",
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "longcat-2.0-free",
@@ -1225,14 +1160,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "mimo-v2-flash-free",
@@ -1260,14 +1193,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "mimo-v2-omni-free",
@@ -1298,14 +1229,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "mimo-v2-pro-free",
@@ -1333,14 +1262,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "mimo-v2.5-free",
@@ -1371,14 +1298,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "minimax-m2.1-free",
@@ -1406,14 +1331,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "minimax-m2.5-free",
@@ -1441,14 +1364,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "minimax-m3-free",
@@ -1478,14 +1399,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "muse-spark-1.2-contributor-free",
@@ -1517,14 +1436,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "muse-spark-1.3-contributor-free",
@@ -1556,14 +1473,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": "muse-spark-1.3-contributor",
-      "usageRank7d": 3,
-      "usage7dTokens": 6038000000000,
-      "usageChangePercent": -18,
-      "usageRank24h": 4,
-      "usage24hTokens": 286000000000,
-      "usageSource": "https://opencode.ai/data/index.json",
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "nemotron-3-super-free",
@@ -1591,14 +1506,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "nemotron-3-ultra-free",
@@ -1630,14 +1543,12 @@
       "statusSource": "https://opencode.ai/docs/console/models.md",
       "availabilityCheckedAt": "2026-11-11T08:47:54.791Z",
       "firstSeenAt": "2026-11-11T08:45:16.522Z",
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": "2026-11-11T08:49:37.128Z"
+      "removedAt": "2026-11-11T08:49:37.128Z",
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "north-mini-code-free",
@@ -1665,14 +1576,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "x-preview-f-free",
@@ -1702,14 +1611,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "pulse-alpha-free",
@@ -1738,14 +1645,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": "pulse-alpha",
-      "usageRank7d": 13,
-      "usage7dTokens": 818000000000,
-      "usageChangePercent": 8,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": "https://opencode.ai/data/index.json",
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "qwen3.6-plus-free",
@@ -1775,14 +1680,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "ring-2.6-1t-free",
@@ -1810,14 +1713,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "space-bunny-free",
@@ -1847,14 +1748,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "step-5-preview-free",
@@ -1884,14 +1783,12 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     },
     {
       "id": "trinity-large-preview-free",
@@ -1919,14 +1816,17 @@
       "sourceUrl": "https://models.dev/providers/opencode/",
       "status": "historical",
       "statusVerified": true,
-      "usageModelId": null,
-      "usageRank7d": null,
-      "usage7dTokens": null,
-      "usageChangePercent": null,
-      "usageRank24h": null,
-      "usage24hTokens": null,
-      "usageSource": null,
-      "removedAt": null
+      "removedAt": null,
+      "intelligenceScore": null,
+      "intelligenceBenchmark": null,
+      "intelligenceDate": null,
+      "intelligenceSource": null,
+      "intelligenceSourceUrl": null
     }
-  ]
+  ],
+  "benchmarkSource": {
+    "name": "Artificial Analysis Intelligence Index",
+    "url": "https://artificialanalysis.ai/models",
+    "mirror": "https://open-llm-radar.com/benchmarks/aa-intelligence-index"
+  }
 }

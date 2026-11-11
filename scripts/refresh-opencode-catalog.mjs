@@ -2,10 +2,10 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const CATALOG_URL = "https://models.dev/api.json?type=all";
 const PROVIDER_ID = "opencode";
-const USAGE_URL = "https://opencode.ai/data/index.json";
 const OFFICIAL_MODELS_DOCS = "https://opencode.ai/docs/console/models.md";
 const OFFICIAL_MODELS_API = "https://opencode.ai/inference/v1/models";
 const OUT = "opencode-free/data.json";
+const BENCHMARKS_FILE = "opencode-free/benchmarks.json";
 
 async function getJson(url) {
   const response = await fetch(url, { headers: { "user-agent": "chatgptwebbuilds-opencode-free-tracker/2.0" } });
@@ -67,17 +67,16 @@ function normalizeCatalog(raw) {
   return { provider, byId };
 }
 
-const [catalog, usage, officialDocs, liveModelPayload, previousText] = await Promise.all([
+const [catalog, officialDocs, liveModelPayload, previousText, benchmarkText] = await Promise.all([
   getJson(CATALOG_URL),
-  getJson(USAGE_URL),
   getText(OFFICIAL_MODELS_DOCS),
   getJson(OFFICIAL_MODELS_API),
-  readFile(OUT, "utf8").catch(() => null)
+  readFile(OUT, "utf8").catch(() => null),
+  readFile(BENCHMARKS_FILE, "utf8")
 ]);
-
-if (!Array.isArray(usage?.leaderboard?.pastWeek) || !Array.isArray(usage?.leaderboard?.pastDay)) {
-  throw new Error("OpenCode usage API response missing pastWeek/pastDay leaderboards.");
-}
+const benchmarkSnapshot = JSON.parse(benchmarkText);
+if (!Array.isArray(benchmarkSnapshot.models)) throw new Error("Benchmark snapshot is invalid.");
+const benchmarksById = new Map(benchmarkSnapshot.models.map(item => [item.id, item]));
 
 const documentedFreeModels = parseOfficialFreeModels(officialDocs);
 const liveRows = Array.isArray(liveModelPayload?.data) ? liveModelPayload.data
@@ -99,22 +98,10 @@ const previousModels = Array.isArray(previous.models) ? previous.models : [];
 const updatedAt = new Date().toISOString();
 const currentIds = new Set(officialFreeModels.map(model => model.id));
 
-const weekly = new Map(usage.leaderboard.pastWeek.map(row => [row.model, row]));
-const daily = new Map(usage.leaderboard.pastDay.map(row => [row.model, row]));
-const aliases = id => {
-  const values = new Set([id]);
-  for (const suffix of ["-contributor-free", "-preview-free", "-free"]) {
-    if (id.endsWith(suffix)) values.add(id.slice(0, -suffix.length));
-  }
-  return [...values];
-};
-
 const currentModels = officialFreeModels.map(official => {
   const catalogEntry = byId.get(official.id);
   const model = catalogEntry?.model || {};
-  const matchKey = aliases(official.id).find(id => weekly.has(id) || daily.has(id));
-  const week = matchKey ? weekly.get(matchKey) : null;
-  const day = matchKey ? daily.get(matchKey) : null;
+  const benchmark = benchmarksById.get(official.id) || null;
 
   return {
     id: official.id,
@@ -142,13 +129,11 @@ const currentModels = officialFreeModels.map(official => {
     statusSource: OFFICIAL_MODELS_DOCS,
     availabilityCheckedAt: updatedAt,
     firstSeenAt: previousModels.find(item => item.id === official.id)?.firstSeenAt || updatedAt,
-    usageModelId: matchKey || null,
-    usageRank7d: week?.rank ?? null,
-    usage7dTokens: week?.tokens ?? null,
-    usageChangePercent: week?.changePercent ?? null,
-    usageRank24h: day?.rank ?? null,
-    usage24hTokens: day?.tokens ?? null,
-    usageSource: matchKey ? USAGE_URL : null
+    intelligenceScore: benchmark?.score ?? null,
+    intelligenceBenchmark: benchmark?.benchmark ?? null,
+    intelligenceDate: benchmark?.date ?? null,
+    intelligenceSourceUrl: benchmark?.sourceUrl ?? null,
+    intelligenceSource: benchmark?.source ?? null
   };
 });
 
@@ -157,8 +142,9 @@ const currentModels = officialFreeModels.map(official => {
 const historyById = new Map();
 for (const old of previousModels) {
   if (!old?.id || currentIds.has(old.id)) continue;
+  const { usageModelId, usageRank7d, usage7dTokens, usageChangePercent, usageRank24h, usage24hTokens, usageSource, ...cleanOld } = old;
   historyById.set(old.id, {
-    ...old,
+    ...cleanOld,
     status: "historical",
     statusVerified: true,
     removedAt: old.removedAt || (old.status === "available" ? updatedAt : null)
@@ -182,15 +168,15 @@ await writeFile(OUT, JSON.stringify({
     officialDocsUrl: OFFICIAL_MODELS_DOCS,
     liveModelsApiUrl: OFFICIAL_MODELS_API,
     catalogUrl: CATALOG_URL,
-    usageUrl: USAGE_URL,
-    usageUpdatedAt: usage.updatedAt || null,
+    benchmarkFile: BENCHMARKS_FILE,
+    benchmarkUpdatedAt: benchmarkSnapshot.updatedAt || null,
     providerPage: "https://models.dev/providers/opencode/",
-    methodology: "Current models must appear in OpenCode's live /inference/v1/models response, appear in its official endpoint table, and have both input and output marked Free in its official pricing table. Models.dev is used only for context/capability metadata. Previous snapshots are retained as history."
+    methodology: "Current models must appear in OpenCode's live /inference/v1/models response, appear in its official endpoint table, and have both input and output marked Free in its official pricing table. Models.dev is used only for context/capability metadata. Intelligence scores are joined by exact model ID from the separately maintained benchmark snapshot; missing scores remain null. Previous snapshots are retained as history."
   },
   statusNote: "CURRENTLY LISTED means the model appears in OpenCode's live models API and official docs mark both input and output free. This confirms catalog availability, not a successful inference request; account, project, region, and quota restrictions may still apply.",
   tpsNote: "No measured TPS is published by these sources. TPS remains unavailable until a reproducible benchmark source is integrated.",
-  leaderboardNote: "Official OpenCode past-week and past-day token usage leaderboard, joined to currently free models. Usage is popularity, not coding quality.",
+  leaderboardNote: "Models are ranked by independently measured Artificial Analysis Intelligence Index scores where an exact model-ID match exists. Usage/popularity data is not used. Unbenchmarked models are not assigned scores.",
   models
 }, null, 2) + "\n");
 
-console.log(`Updated ${currentModels.length} currently listed free OpenCode models; retained ${historicalModels.length} historical entries; joined official usage rankings.`);
+console.log(`Updated ${currentModels.length} currently listed free OpenCode models; retained ${historicalModels.length} historical entries; joined verified benchmark scores where available.`);
